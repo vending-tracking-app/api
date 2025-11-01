@@ -2,7 +2,7 @@ name: vending-tracking-app
 
 services:
   postgres:
-    image: postgres:18
+    image: postgres:16
     container_name: vending-tracking-app-postgres
     environment:
       POSTGRES_USER: vending-tracking-app
