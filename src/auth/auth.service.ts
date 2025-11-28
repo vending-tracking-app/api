@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { betterAuth as betterAuthFactory } from 'better-auth';
 import { fromNodeHeaders } from 'better-auth/node';
 import { type Request } from 'express';
-import { randomUUID } from 'crypto';
 import { DataSource } from 'typeorm';
 
 import { SessionsRepository } from './sessions.repository';
@@ -25,7 +24,7 @@ export class AuthService {
       emailAndPassword: { enabled: true },
       advanced: {
         database: {
-          generateId: () => randomUUID(),
+          generateId: 'uuid',
         },
       },
     });
