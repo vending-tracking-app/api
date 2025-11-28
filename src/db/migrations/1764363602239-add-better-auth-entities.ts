@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddBetterAuthEntities1762033899857 implements MigrationInterface {
-  name = 'AddBetterAuthEntities1762033899857';
+export class AddBetterAuthEntities1764363602239 implements MigrationInterface {
+  name = 'AddBetterAuthEntities1764363602239';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -28,10 +28,10 @@ export class AddBetterAuthEntities1762033899857 implements MigrationInterface {
                 "providerId" text NOT NULL,
                 "accessToken" text,
                 "refreshToken" text,
-                "idToken" text,
                 "accessTokenExpiresAt" TIMESTAMP WITH TIME ZONE,
                 "refreshTokenExpiresAt" TIMESTAMP WITH TIME ZONE,
                 "scope" text,
+                "idToken" text,
                 "password" text,
                 "userId" uuid NOT NULL,
                 CONSTRAINT "PK_54115ee388cdb6d86bb4bf5b2ea" PRIMARY KEY ("id")
@@ -42,8 +42,8 @@ export class AddBetterAuthEntities1762033899857 implements MigrationInterface {
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-                "expiresAt" TIMESTAMP WITH TIME ZONE NOT NULL,
                 "token" text NOT NULL,
+                "expiresAt" TIMESTAMP WITH TIME ZONE NOT NULL,
                 "ipAddress" text,
                 "userAgent" text,
                 "userId" uuid NOT NULL,

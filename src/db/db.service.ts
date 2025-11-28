@@ -22,7 +22,7 @@ export class DbService implements OnModuleInit {
         `Database migrations executed successfully: ${migrations.map((m) => m.name).join(', ')}`,
       );
     } catch (error) {
-      this.logger.error('Error during migration execution', error);
+      this.logger.error('Error during migration execution');
       throw error;
     }
   }

@@ -1,4 +1,3 @@
-import { typeormAdapter } from '@hedystia/better-auth-typeorm';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { betterAuth as betterAuthFactory } from 'better-auth';
@@ -7,7 +6,8 @@ import { type Request } from 'express';
 import { randomUUID } from 'crypto';
 import { DataSource } from 'typeorm';
 
-import { Session } from './entities/session';
+import { SessionsRepository } from './sessions.repository';
+import { typeormAdapter } from './typeorm-adapter';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +16,7 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly dataSource: DataSource,
+    private readonly sessionsRepository: SessionsRepository,
   ) {
     this.betterAuth = betterAuthFactory({
       trustedOrigins: [this.configService.getOrThrow('FRONTEND_URL')],
@@ -39,7 +40,7 @@ export class AuthService {
       return null;
     }
 
-    return this.dataSource.manager.findOneOrFail(Session, {
+    return this.sessionsRepository.findOne({
       where: {
         id: session.session.id,
       },

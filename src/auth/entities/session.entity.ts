@@ -3,16 +3,17 @@ import { Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../db/base.entity';
 import { DateColumn } from '../../db/columns/date-column';
 import { TextColumn } from '../../db/columns/text-column';
-import { User } from './user';
+import { UUIDColumn } from '../../db/columns/uuid-column';
+import { User } from './user.entity';
 
 @Entity()
 export class Session extends BaseEntity {
-  @DateColumn()
-  expiresAt: Date;
-
   @Index({ unique: true })
   @TextColumn()
   token: string;
+
+  @DateColumn()
+  expiresAt: Date;
 
   @TextColumn({ nullable: true })
   ipAddress: string | null;
@@ -20,7 +21,7 @@ export class Session extends BaseEntity {
   @TextColumn({ nullable: true })
   userAgent: string | null;
 
-  @TextColumn()
+  @UUIDColumn()
   userId: string;
 
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })

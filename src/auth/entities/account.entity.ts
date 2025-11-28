@@ -3,7 +3,8 @@ import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { DateColumn } from '../../db/columns/date-column';
-import { User } from './user';
+import { UUIDColumn } from '../../db/columns/uuid-column';
+import { User } from './user.entity';
 
 @Entity()
 export class Account extends BaseEntity {
@@ -19,9 +20,6 @@ export class Account extends BaseEntity {
   @TextColumn({ nullable: true })
   refreshToken: string | null;
 
-  @TextColumn({ nullable: true })
-  idToken: string | null;
-
   @DateColumn({ nullable: true })
   accessTokenExpiresAt: Date | null;
 
@@ -32,9 +30,12 @@ export class Account extends BaseEntity {
   scope: string | null;
 
   @TextColumn({ nullable: true })
+  idToken: string | null;
+
+  @TextColumn({ nullable: true })
   password: string | null;
 
-  @TextColumn()
+  @UUIDColumn()
   userId: string;
 
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })

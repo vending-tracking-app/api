@@ -1,12 +1,12 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 
-import { User } from '../auth/entities/user';
-import { Account } from '../auth/entities/account';
-import { Session } from '../auth/entities/session';
-import { Verification } from '../auth/entities/verification';
+import { User } from '../auth/entities/user.entity';
+import { Account } from '../auth/entities/account.entity';
+import { Session } from '../auth/entities/session.entity';
+import { Verification } from '../auth/entities/verification.entity';
 
-import { AddBetterAuthEntities1762033899857 } from './migrations/1762033899857-add-better-auth-entities';
+import { AddBetterAuthEntities1764363602239 } from './migrations/1764363602239-add-better-auth-entities';
 
 config();
 
@@ -19,7 +19,7 @@ const dataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   entities: [User, Account, Session, Verification],
-  migrations: [AddBetterAuthEntities1762033899857],
+  migrations: [AddBetterAuthEntities1764363602239],
 });
 
 export default dataSource;

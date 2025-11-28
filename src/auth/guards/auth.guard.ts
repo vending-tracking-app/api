@@ -11,8 +11,8 @@ import { type Request } from 'express';
 
 import { AuthService } from '../auth.service';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
-import { Session } from '../entities/session';
-import { User } from '../entities/user';
+import { Session } from '../entities/session.entity';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
       request.headers,
     );
 
-    if (!session || !session.user) {
+    if (!session) {
       throw new UnauthorizedException();
     }
 
