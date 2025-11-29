@@ -30,11 +30,11 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
     protected readonly entity: EntityTarget<Entity>,
   ) {}
 
-  get manager() {
+  protected get manager() {
     return this.txHost.tx;
   }
 
-  get repository() {
+  protected get repository() {
     return this.manager.getRepository(this.entity);
   }
 

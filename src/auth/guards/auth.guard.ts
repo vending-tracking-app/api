@@ -7,12 +7,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { fromNodeHeaders } from 'better-auth/node';
 import { type Request } from 'express';
 
+import { ContextService } from '../../context/context.service';
 import { AuthService } from '../auth.service';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
-import { Session } from '../entities/session.entity';
-import { User } from '../entities/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     @Inject(Reflector)
     private readonly reflector: Reflector,
+    private readonly contextService: ContextService,
     private readonly authService: AuthService,
   ) {}
 
@@ -34,20 +35,17 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context
-      .switchToHttp()
-      .getRequest<Request & { session: Session; user: User }>();
+    const request = context.switchToHttp().getRequest<Request>();
 
-    const session = await this.authService.getSessionFromHeaders(
-      request.headers,
-    );
+    const session = await this.authService.betterAuth.api.getSession({
+      headers: fromNodeHeaders(request.headers),
+    });
 
     if (!session) {
       throw new UnauthorizedException();
     }
 
-    request.session = session;
-    request.user = session.user;
+    this.contextService.set('userId', session.user.id);
 
     return true;
   }

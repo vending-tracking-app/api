@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 
-import { User } from '../auth/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Account } from '../auth/entities/account.entity';
 import { Session } from '../auth/entities/session.entity';
 import { Verification } from '../auth/entities/verification.entity';

@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { betterAuth as betterAuthFactory } from 'better-auth';
-import { fromNodeHeaders } from 'better-auth/node';
-import { type Request } from 'express';
 import { DataSource } from 'typeorm';
 
-import { SessionsRepository } from './sessions.repository';
 import { typeormAdapter } from './typeorm-adapter';
 
 @Injectable()
@@ -15,7 +12,6 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly dataSource: DataSource,
-    private readonly sessionsRepository: SessionsRepository,
   ) {
     this.betterAuth = betterAuthFactory({
       trustedOrigins: [this.configService.getOrThrow('FRONTEND_URL')],
@@ -26,25 +22,6 @@ export class AuthService {
         database: {
           generateId: 'uuid',
         },
-      },
-    });
-  }
-
-  async getSessionFromHeaders(headers: Request['headers']) {
-    const session = await this.betterAuth.api.getSession({
-      headers: fromNodeHeaders(headers),
-    });
-
-    if (!session?.session) {
-      return null;
-    }
-
-    return this.sessionsRepository.findOne({
-      where: {
-        id: session.session.id,
-      },
-      relations: {
-        user: true,
       },
     });
   }

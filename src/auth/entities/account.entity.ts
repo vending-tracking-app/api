@@ -4,7 +4,7 @@ import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { DateColumn } from '../../db/columns/date-column';
 import { UUIDColumn } from '../../db/columns/uuid-column';
-import { User } from './user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Account extends BaseEntity {

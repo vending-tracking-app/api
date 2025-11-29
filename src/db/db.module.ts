@@ -1,26 +1,11 @@
 import { Module } from '@nestjs/common';
-import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
-import { ClsPluginTransactional } from '@nestjs-cls/transactional';
-import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
-import { ClsModule } from 'nestjs-cls';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DbService } from './db.service';
 import dataSource from './data-source';
+import { DbService } from './db.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(dataSource.options),
-    ClsModule.forRoot({
-      plugins: [
-        new ClsPluginTransactional({
-          imports: [TypeOrmModule],
-          adapter: new TransactionalAdapterTypeOrm({
-            dataSourceToken: getDataSourceToken(),
-          }),
-        }),
-      ],
-    }),
-  ],
+  imports: [TypeOrmModule.forRoot(dataSource.options)],
   providers: [DbService],
 })
 export class DbModule {}
