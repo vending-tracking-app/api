@@ -12,10 +12,7 @@ async function bootstrap() {
 
   app.use(bodyParserMiddleware);
 
-  const config = new DocumentBuilder()
-    .addBearerAuth()
-    .addSecurityRequirements('bearer')
-    .build();
+  const config = new DocumentBuilder().build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 

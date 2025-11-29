@@ -1,4 +1,5 @@
 import { All, Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { toNodeHandler } from 'better-auth/node';
 import { type Request, type Response } from 'express';
 
@@ -11,6 +12,7 @@ import { EmailSignInDto } from './dto/email-sign-in.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiExcludeEndpoint()
   @All('{*path}')
   async handleAll(@Req() req: Request, @Res() res: Response) {
     await toNodeHandler(this.authService.betterAuth)(req, res);
