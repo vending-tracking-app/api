@@ -10,8 +10,8 @@ import { Reflector } from '@nestjs/core';
 import { fromNodeHeaders } from 'better-auth/node';
 import { type Request } from 'express';
 
-import { ContextService } from '../../context/context.service';
-import { AuthService } from '../auth.service';
+import { ContextService } from '../context/context.service';
+import { AuthService } from '../auth/auth.service';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()

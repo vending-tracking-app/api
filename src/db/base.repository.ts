@@ -2,6 +2,7 @@ import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import {
   EntityTarget,
+  FindManyOptions,
   FindOneOptions,
   FindOptionsRelations,
   ObjectLiteral,
@@ -36,6 +37,15 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
 
   protected get repository() {
     return this.manager.getRepository(this.entity);
+  }
+
+  async find<R extends FindOptionsRelations<Entity>>(
+    options?: Omit<FindManyOptions<Entity>, 'relations'> & {
+      relations?: R;
+    },
+  ) {
+    const result = await this.repository.find(options);
+    return result as WithRelations<Entity, R>[];
   }
 
   async findOne<R extends FindOptionsRelations<Entity>>(

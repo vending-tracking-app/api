@@ -2,7 +2,7 @@ import { All, Controller, Req, Res } from '@nestjs/common';
 import { toNodeHandler } from 'better-auth/node';
 import { type Request, type Response } from 'express';
 
-import { Public } from './decorators/public.decorator';
+import { Public } from '../decorators/public.decorator';
 import { AuthService } from './auth.service';
 
 @Public()

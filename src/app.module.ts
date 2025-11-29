@@ -6,7 +6,8 @@ import { DbModule } from './db/db.module';
 import { ContextModule } from './context/context.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { AuthGuard } from './auth/guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { AuthGuard } from './auth/guards/auth.guard';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     {
       provide: APP_PIPE,

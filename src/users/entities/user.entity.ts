@@ -4,6 +4,11 @@ import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { BooleanColumn } from '../../db/columns/boolean-column';
 
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  EXPEDITOR = 'EXPEDITOR',
+}
+
 @Entity()
 export class User extends BaseEntity {
   @TextColumn()
@@ -18,4 +23,7 @@ export class User extends BaseEntity {
 
   @TextColumn({ nullable: true })
   image: string | null;
+
+  @TextColumn()
+  role: UserRole;
 }
