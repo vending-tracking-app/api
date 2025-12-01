@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { betterAuth as betterAuthFactory } from 'better-auth';
+import { fromNodeHeaders } from 'better-auth/node';
+import { IncomingHttpHeaders } from 'http';
 import { DataSource } from 'typeorm';
 
 import { typeormAdapter } from './typeorm-adapter';
@@ -9,12 +10,8 @@ import { typeormAdapter } from './typeorm-adapter';
 export class AuthService {
   readonly betterAuth: ReturnType<typeof betterAuthFactory>;
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly dataSource: DataSource,
-  ) {
+  constructor(private readonly dataSource: DataSource) {
     this.betterAuth = betterAuthFactory({
-      trustedOrigins: [this.configService.getOrThrow('FRONTEND_URL')],
       basePath: '/auth',
       database: typeormAdapter(this.dataSource),
       emailAndPassword: { enabled: true },
@@ -23,6 +20,12 @@ export class AuthService {
           generateId: 'uuid',
         },
       },
+    });
+  }
+
+  async getSessionFromHeaders(headers: IncomingHttpHeaders) {
+    return this.betterAuth.api.getSession({
+      headers: fromNodeHeaders(headers),
     });
   }
 }

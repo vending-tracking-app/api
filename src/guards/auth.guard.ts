@@ -7,7 +7,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { fromNodeHeaders } from 'better-auth/node';
 import { type Request } from 'express';
 
 import { ContextService } from '../context/context.service';
@@ -37,9 +36,9 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>();
 
-    const session = await this.authService.betterAuth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
+    const session = await this.authService.getSessionFromHeaders(
+      request.headers,
+    );
 
     if (!session) {
       throw new UnauthorizedException();
