@@ -10,6 +10,7 @@ import { IncomingHttpHeaders } from 'http';
 import { DataSource } from 'typeorm';
 
 import { typeormAdapter } from './typeorm-adapter';
+import { UserRole } from './constants/user-role.constant';
 
 const authOptions = {
   basePath: '/auth',
@@ -38,6 +39,26 @@ export class AuthService {
   async getSessionFromHeaders(headers: IncomingHttpHeaders) {
     return this.betterAuth.api.getSession({
       headers: fromNodeHeaders(headers),
+    });
+  }
+
+  async createUser(data: {
+    email: string;
+    name: string;
+    password: string;
+    role: UserRole;
+    image?: string;
+  }) {
+    return this.betterAuth.api.createUser({
+      body: {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        role: data.role,
+        data: {
+          image: data.image,
+        },
+      },
     });
   }
 }

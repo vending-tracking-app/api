@@ -9,8 +9,8 @@ import {
 import { Reflector } from '@nestjs/core';
 
 import { ContextService } from '../context/context.service';
-import { UserRole } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { UserRole } from '../auth/constants/user-role.constant';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 

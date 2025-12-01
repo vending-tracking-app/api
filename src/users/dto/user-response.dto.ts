@@ -1,4 +1,4 @@
-import { UserRole } from '../entities/user.entity';
+import { UserRole } from '../../auth/constants/user-role.constant';
 
 export class UserResponseDto {
   id: string;

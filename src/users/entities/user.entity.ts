@@ -4,11 +4,7 @@ import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { BooleanColumn } from '../../db/columns/boolean-column';
 import { DateColumn } from '../../db/columns/date-column';
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
+import { UserRole } from '../../auth/constants/user-role.constant';
 
 @Entity()
 export class User extends BaseEntity {

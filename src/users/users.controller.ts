@@ -1,15 +1,29 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { Roles } from '../decorators/roles.decorator';
-import { UserRole } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UserResponseDto } from './dto/user-response.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UsersMapper } from './users.mapper';
+import { UserRole } from '../auth/constants/user-role.constant';
 
 @Roles(UserRole.ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    const user = await this.usersService.create(createUserDto);
+    return UsersMapper.toResponse(user);
+  }
 
   @Get()
   async findAll(): Promise<UserResponseDto[]> {
