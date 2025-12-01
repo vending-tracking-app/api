@@ -3,10 +3,11 @@ import { Entity, Index } from 'typeorm';
 import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { BooleanColumn } from '../../db/columns/boolean-column';
+import { DateColumn } from '../../db/columns/date-column';
 
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  EXPEDITOR = 'EXPEDITOR',
+  ADMIN = 'admin',
+  USER = 'user',
 }
 
 @Entity()
@@ -24,6 +25,15 @@ export class User extends BaseEntity {
   @TextColumn({ nullable: true })
   image: string | null;
 
-  @TextColumn()
+  @TextColumn({ default: UserRole.USER })
   role: UserRole;
+
+  @BooleanColumn({ nullable: true })
+  banned: boolean | null;
+
+  @TextColumn({ nullable: true })
+  banReason: string | null;
+
+  @DateColumn({ nullable: true })
+  banExpires: Date | null;
 }

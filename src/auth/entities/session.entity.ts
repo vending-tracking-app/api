@@ -27,4 +27,11 @@ export class Session extends BaseEntity {
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user?: User;
+
+  @UUIDColumn({ nullable: true })
+  impersonatedBy: string | null;
+
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'impersonatedBy', referencedColumnName: 'id' })
+  impersonatedByUser?: User | null;
 }

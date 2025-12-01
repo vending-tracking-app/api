@@ -1,25 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { betterAuth as betterAuthFactory } from 'better-auth';
+import {
+  Auth as BetterAuth,
+  betterAuth as betterAuthFactory,
+  BetterAuthOptions,
+} from 'better-auth';
+import { admin as adminPlugin } from 'better-auth/plugins';
 import { fromNodeHeaders } from 'better-auth/node';
 import { IncomingHttpHeaders } from 'http';
 import { DataSource } from 'typeorm';
 
 import { typeormAdapter } from './typeorm-adapter';
 
+const authOptions = {
+  basePath: '/auth',
+  emailAndPassword: { enabled: true },
+  plugins: [adminPlugin()],
+  advanced: {
+    database: {
+      generateId: 'uuid',
+    },
+  },
+} satisfies BetterAuthOptions;
+
+export type Auth = BetterAuth<typeof authOptions>;
+
 @Injectable()
 export class AuthService {
-  readonly betterAuth: ReturnType<typeof betterAuthFactory>;
+  readonly betterAuth: Auth;
 
   constructor(private readonly dataSource: DataSource) {
     this.betterAuth = betterAuthFactory({
-      basePath: '/auth',
+      ...authOptions,
       database: typeormAdapter(this.dataSource),
-      emailAndPassword: { enabled: true },
-      advanced: {
-        database: {
-          generateId: 'uuid',
-        },
-      },
     });
   }
 

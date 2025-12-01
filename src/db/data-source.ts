@@ -7,7 +7,7 @@ import { Session } from '../auth/entities/session.entity';
 import { Verification } from '../auth/entities/verification.entity';
 
 import { AddBetterAuthEntities1764363602239 } from './migrations/1764363602239-add-better-auth-entities';
-import { AddUserRoleColumn1764441395202 } from './migrations/1764441395202-add-user-role-column';
+import { AddBetterAuthAdminPlugin1764582819799 } from './migrations/1764582819799-add-better-auth-admin-plugin';
 
 config();
 
@@ -22,7 +22,7 @@ const dataSource = new DataSource({
   entities: [User, Account, Session, Verification],
   migrations: [
     AddBetterAuthEntities1764363602239,
-    AddUserRoleColumn1764441395202,
+    AddBetterAuthAdminPlugin1764582819799,
   ],
 });
 
