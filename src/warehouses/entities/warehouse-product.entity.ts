@@ -12,7 +12,10 @@ export class WarehouseProduct extends BaseEntity {
   @UUIDColumn()
   warehouseId: string;
 
-  @ManyToOne(() => Warehouse, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => Warehouse, (warehouse) => warehouse.warehouseProducts, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'warehouseId', referencedColumnName: 'id' })
   warehouse?: Warehouse;
 
