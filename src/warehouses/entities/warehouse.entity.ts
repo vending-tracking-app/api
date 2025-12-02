@@ -16,7 +16,10 @@ export class Warehouse extends BaseEntity {
   @UUIDColumn({ nullable: true })
   userId: string | null;
 
-  @OneToOne(() => User, { nullable: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.warehouse, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user?: User | null;
 
@@ -25,7 +28,7 @@ export class Warehouse extends BaseEntity {
 
   @OneToOne(() => Machine, (machine) => machine.warehouse, {
     nullable: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'machineId', referencedColumnName: 'id' })
   machine?: Machine | null;

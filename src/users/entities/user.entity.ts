@@ -1,10 +1,11 @@
-import { Entity, Index } from 'typeorm';
+import { Entity, Index, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../../db/base.entity';
 import { TextColumn } from '../../db/columns/text-column';
 import { BooleanColumn } from '../../db/columns/boolean-column';
 import { DateColumn } from '../../db/columns/date-column';
 import { UserRole } from '../../auth/constants/user-role.constant';
+import { Warehouse } from '../../warehouses/entities/warehouse.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -32,4 +33,7 @@ export class User extends BaseEntity {
 
   @DateColumn({ nullable: true })
   banExpires: Date | null;
+
+  @OneToOne(() => Warehouse, (warehouse) => warehouse.user)
+  warehouse?: Warehouse;
 }

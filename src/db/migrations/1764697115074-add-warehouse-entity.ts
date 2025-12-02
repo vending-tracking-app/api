@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddWarehouseEntity1764695803005 implements MigrationInterface {
-  name = 'AddWarehouseEntity1764695803005';
+export class AddWarehouseEntity1764697115074 implements MigrationInterface {
+  name = 'AddWarehouseEntity1764697115074';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -41,11 +41,13 @@ export class AddWarehouseEntity1764695803005 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE "warehouse"
-            ADD CONSTRAINT "FK_d2bab02e8eea1680e8e372b51d8" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+            ADD CONSTRAINT "FK_d2bab02e8eea1680e8e372b51d8" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE
+            SET NULL ON UPDATE NO ACTION
         `);
     await queryRunner.query(`
             ALTER TABLE "warehouse"
-            ADD CONSTRAINT "FK_fc57488b8a2225120267a353df4" FOREIGN KEY ("machineId") REFERENCES "machine"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+            ADD CONSTRAINT "FK_fc57488b8a2225120267a353df4" FOREIGN KEY ("machineId") REFERENCES "machine"("id") ON DELETE
+            SET NULL ON UPDATE NO ACTION
         `);
   }
 

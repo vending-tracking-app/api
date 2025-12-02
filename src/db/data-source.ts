@@ -14,7 +14,7 @@ import { AddBetterAuthEntities1764363602239 } from './migrations/1764363602239-a
 import { AddBetterAuthAdminPlugin1764582819799 } from './migrations/1764582819799-add-better-auth-admin-plugin';
 import { AddProductEntity1764688644514 } from './migrations/1764688644514-add-product-entity';
 import { AddMachineEntity1764689414848 } from './migrations/1764689414848-add-machine-entity';
-import { AddWarehouseEntity1764695803005 } from './migrations/1764695803005-add-warehouse-entity';
+import { AddWarehouseEntity1764697115074 } from './migrations/1764697115074-add-warehouse-entity';
 
 config();
 
@@ -41,7 +41,7 @@ const dataSource = new DataSource({
     AddBetterAuthAdminPlugin1764582819799,
     AddProductEntity1764688644514,
     AddMachineEntity1764689414848,
-    AddWarehouseEntity1764695803005,
+    AddWarehouseEntity1764697115074,
   ],
 });
 
