@@ -1,4 +1,5 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 
 import { AuthService } from '../auth/auth.service';
 import { UsersRepository } from './users.repository';
@@ -20,13 +21,14 @@ export class UsersService {
     private readonly authService: AuthService,
   ) {}
 
+  @Transactional()
   async create(data: CreateUserParams): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: data.email },
     });
 
     if (existingUser) {
-      throw new ConflictException('User with this email already exists');
+      throw new Error('User with this email already exists');
     }
 
     const newUser = await this.authService.createUser(data);

@@ -19,12 +19,6 @@ import { UserRole } from '../auth/constants/user-role.constant';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const user = await this.usersService.create(createUserDto);
-    return UsersMapper.toResponse(user);
-  }
-
   @Get()
   async findAll(): Promise<UserResponseDto[]> {
     const users = await this.usersService.findAll();
@@ -39,6 +33,12 @@ export class UsersController {
       throw new NotFoundException();
     }
 
+    return UsersMapper.toResponse(user);
+  }
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    const user = await this.usersService.create(createUserDto);
     return UsersMapper.toResponse(user);
   }
 }
