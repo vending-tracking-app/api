@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { FindOptionsWhere } from 'typeorm';
 
 import { MachinesRepository } from './machines.repository';
 import { Machine } from './entities/machine.entity';
+import { WarehousesService } from '../warehouses/warehouses.service';
+import { WarehouseType } from '../warehouses/constants/warehouse-type.constant';
 
 export interface CreateMachineParams {
   name: string;
@@ -16,7 +19,10 @@ export interface UpdateMachineParams {
 
 @Injectable()
 export class MachinesService {
-  constructor(private readonly machinesRepository: MachinesRepository) {}
+  constructor(
+    private readonly machinesRepository: MachinesRepository,
+    private readonly warehousesService: WarehousesService,
+  ) {}
 
   async findAll(): Promise<Machine[]> {
     return this.machinesRepository.find();
@@ -32,10 +38,20 @@ export class MachinesService {
     return machine;
   }
 
+  @Transactional()
   async create(params: CreateMachineParams): Promise<Machine> {
     const { name, location } = params;
-    const machine = this.machinesRepository.create({ name, location });
-    return this.machinesRepository.save(machine);
+
+    const machine = await this.machinesRepository.save(
+      this.machinesRepository.create({ name, location }),
+    );
+
+    await this.warehousesService.create({
+      type: WarehouseType.MACHINE,
+      machineId: machine.id,
+    });
+
+    return machine;
   }
 
   async update(id: string, params: UpdateMachineParams): Promise<Machine> {
