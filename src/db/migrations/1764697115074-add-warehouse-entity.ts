@@ -49,6 +49,9 @@ export class AddWarehouseEntity1764697115074 implements MigrationInterface {
             ADD CONSTRAINT "FK_fc57488b8a2225120267a353df4" FOREIGN KEY ("machineId") REFERENCES "machine"("id") ON DELETE
             SET NULL ON UPDATE NO ACTION
         `);
+    await queryRunner.query(`
+            INSERT INTO "warehouse" ("type") VALUES ('market'), ('customer'), ('waste')
+        `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

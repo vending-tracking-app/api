@@ -72,4 +72,8 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
   async save(entity: Entity): Promise<Entity> {
     return this.repository.save(entity);
   }
+
+  async saveMany(entities: Entity[]): Promise<Entity[]> {
+    return this.repository.save(entities);
+  }
 }

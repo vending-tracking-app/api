@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { MachinesModule } from './machines/machines.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
+import { StockMovementsModule } from './stock-movements/stock-movements.module';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 
@@ -22,6 +23,7 @@ import { RolesGuard } from './guards/roles.guard';
     ProductsModule,
     MachinesModule,
     WarehousesModule,
+    StockMovementsModule,
   ],
   providers: [
     {
@@ -34,7 +36,7 @@ import { RolesGuard } from './guards/roles.guard';
     },
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe(),
+      useValue: new ValidationPipe({ transform: true }),
     },
   ],
 })
