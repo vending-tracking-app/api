@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Transactional } from '@nestjs-cls/transactional';
+import { FindOptionsWhere } from 'typeorm';
 
-import { AuthService } from '../auth/auth.service';
 import { UsersRepository } from './users.repository';
+import { AuthService } from '../auth/auth.service';
 import { User } from './entities/user.entity';
 import { UserRole } from '../auth/constants/user-role.constant';
 
@@ -21,7 +21,24 @@ export class UsersService {
     private readonly authService: AuthService,
   ) {}
 
-  @Transactional()
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
+  async findOneByOrThrow(where: FindOptionsWhere<User>): Promise<User> {
+    const user = await this.findOneBy(where);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  }
+
+  async findOneBy(where: FindOptionsWhere<User>): Promise<User | null> {
+    return this.usersRepository.findOne({ where });
+  }
+
   async create(data: CreateUserParams): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: data.email },
@@ -32,27 +49,6 @@ export class UsersService {
     }
 
     const newUser = await this.authService.createUser(data);
-
-    if (!newUser) {
-      throw new Error('Failed to create user');
-    }
-
-    const user = await this.usersRepository.findOne({
-      where: { id: newUser.user.id },
-    });
-
-    if (!user) {
-      throw new Error('User created but not found in database');
-    }
-
-    return user;
-  }
-
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
-
-  async findOneById(id: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id } });
+    return this.findOneByOrThrow({ id: newUser.user.id });
   }
 }

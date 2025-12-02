@@ -45,7 +45,7 @@ export class RolesGuard implements CanActivate {
     }
 
     const userId = this.contextService.get('userId');
-    const user = await this.usersService.findOneById(userId);
+    const user = await this.usersService.findOneBy({ id: userId });
 
     if (!user) {
       throw new ForbiddenException();
