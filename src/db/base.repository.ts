@@ -1,11 +1,14 @@
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import {
+  DeepPartial,
+  EntityManager,
   EntityTarget,
   FindManyOptions,
   FindOneOptions,
   FindOptionsRelations,
   ObjectLiteral,
+  Repository,
 } from 'typeorm';
 
 export type WithRelations<E, R extends FindOptionsRelations<E>> = Omit<
@@ -31,11 +34,11 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
     protected readonly entity: EntityTarget<Entity>,
   ) {}
 
-  protected get manager() {
+  protected get manager(): EntityManager {
     return this.txHost.tx;
   }
 
-  protected get repository() {
+  protected get repository(): Repository<Entity> {
     return this.manager.getRepository(this.entity);
   }
 
@@ -43,7 +46,7 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
     options?: Omit<FindManyOptions<Entity>, 'relations'> & {
       relations?: R;
     },
-  ) {
+  ): Promise<WithRelations<Entity, R>[]> {
     const result = await this.repository.find(options);
     return result as WithRelations<Entity, R>[];
   }
@@ -52,7 +55,7 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
     options: Omit<FindOneOptions<Entity>, 'relations'> & {
       relations?: R;
     },
-  ) {
+  ): Promise<WithRelations<Entity, R> | null> {
     const result = await this.repository.findOne(options);
 
     if (!result) {
@@ -60,5 +63,13 @@ export abstract class BaseRepository<Entity extends ObjectLiteral> {
     }
 
     return result as WithRelations<Entity, R>;
+  }
+
+  create(entityLike: DeepPartial<Entity>): Entity {
+    return this.repository.create(entityLike);
+  }
+
+  async save(entity: Entity): Promise<Entity> {
+    return this.repository.save(entity);
   }
 }
