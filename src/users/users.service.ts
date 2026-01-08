@@ -18,6 +18,12 @@ export interface CreateUserParams {
   image?: string;
 }
 
+export interface UpdateUserParams {
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
 @Injectable()
 export class UsersService implements OnModuleInit {
   private readonly logger = new Logger(UsersService.name);
@@ -88,5 +94,24 @@ export class UsersService implements OnModuleInit {
     });
 
     return this.findOneByOrThrow({ id: user.id });
+  }
+
+  @Transactional()
+  async update(id: string, data: UpdateUserParams): Promise<User> {
+    const user = await this.findOneByOrThrow({ id });
+
+    if (data.name !== undefined) {
+      user.name = data.name;
+    }
+
+    if (data.email !== undefined) {
+      user.email = data.email;
+    }
+
+    if (data.image !== undefined) {
+      user.image = data.image;
+    }
+
+    return this.usersRepository.save(user);
   }
 }

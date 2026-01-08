@@ -20,6 +20,13 @@ export class ProductsController {
     return products.map((product) => ProductsMapper.toResponse(product));
   }
 
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<ProductResponseDto> {
+    const product = await this.productsService.findOneByOrThrow({ id });
+    return ProductsMapper.toResponse(product);
+  }
+
   @Post()
   async create(
     @Body() createProductDto: CreateProductDto,

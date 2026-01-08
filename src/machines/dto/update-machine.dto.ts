@@ -9,4 +9,3 @@ export class UpdateMachineDto {
   @IsString()
   location?: string;
 }
-

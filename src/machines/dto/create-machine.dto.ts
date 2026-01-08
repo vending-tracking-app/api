@@ -9,4 +9,3 @@ export class CreateMachineDto {
   @IsNotEmpty()
   location: string;
 }
-

@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 
@@ -13,6 +14,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersMapper } from './users.mapper';
 import { UserRole } from '../auth/constants/user-role.constant';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Roles(UserRole.ADMIN)
 @Controller('users')
@@ -39,6 +41,15 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const user = await this.usersService.create(createUserDto);
+    return UsersMapper.toResponse(user);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.usersService.update(id, updateUserDto);
     return UsersMapper.toResponse(user);
   }
 }

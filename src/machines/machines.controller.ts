@@ -20,6 +20,13 @@ export class MachinesController {
     return machines.map((machine) => MachinesMapper.toResponse(machine));
   }
 
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<MachineResponseDto> {
+    const machine = await this.machinesService.findOneByOrThrow({ id });
+    return MachinesMapper.toResponse(machine);
+  }
+
   @Post()
   async create(
     @Body() createMachineDto: CreateMachineDto,

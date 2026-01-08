@@ -5,4 +5,3 @@ export class MachineResponseDto {
   name: string;
   location: string;
 }
-
