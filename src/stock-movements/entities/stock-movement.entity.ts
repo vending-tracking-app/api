@@ -7,6 +7,7 @@ import { Warehouse } from '../../warehouses/entities/warehouse.entity';
 import { User } from '../../users/entities/user.entity';
 import { StockMovementType } from '../constants/stock-movement-type.constant';
 import { StockMovementItem } from './stock-movement-item.entity';
+import { ShiftOperation } from '../../shift-operations/entities/shift-operation.entity';
 
 @Entity()
 export class StockMovement extends BaseEntity {
@@ -39,4 +40,10 @@ export class StockMovement extends BaseEntity {
 
   @OneToMany(() => StockMovementItem, (item) => item.movement)
   items?: StockMovementItem[];
+
+  @UUIDColumn({ nullable: true })
+  shiftOperationId: string | null;
+
+  @ManyToOne(() => ShiftOperation, { nullable: true })
+  shiftOperation?: ShiftOperation | null;
 }

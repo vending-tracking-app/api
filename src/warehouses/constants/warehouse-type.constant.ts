@@ -4,4 +4,5 @@ export enum WarehouseType {
   MARKET = 'market',
   CUSTOMER = 'customer',
   WASTE = 'waste',
+  NOWHERE = 'nowhere',
 }

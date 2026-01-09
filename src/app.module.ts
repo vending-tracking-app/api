@@ -10,6 +10,7 @@ import { ProductsModule } from './products/products.module';
 import { MachinesModule } from './machines/machines.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { StockMovementsModule } from './stock-movements/stock-movements.module';
+import { ShiftOperationsModule } from './shift-operations/shift-operations.module';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 
@@ -24,7 +25,7 @@ import { RolesGuard } from './guards/roles.guard';
     MachinesModule,
     WarehousesModule,
     StockMovementsModule,
-    ConfigModule,
+    ShiftOperationsModule,
   ],
   providers: [
     {

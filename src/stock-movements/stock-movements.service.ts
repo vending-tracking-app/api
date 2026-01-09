@@ -13,8 +13,9 @@ interface CreateStockMovementParams {
   fromId?: string;
   toId?: string;
   type: StockMovementType;
-  note?: string;
+  note?: string | null;
   items: { productId: string; quantity: number }[];
+  shiftOperationId?: string;
 }
 
 @Injectable()
@@ -28,7 +29,7 @@ export class StockMovementsService {
 
   @Transactional()
   async create(params: CreateStockMovementParams) {
-    const { fromId, toId, type, note, items } = params;
+    const { fromId, toId, type, note, items, shiftOperationId } = params;
 
     const { fromWarehouse, toWarehouse } =
       await this.getWarehousesForStockMovement({
@@ -44,6 +45,7 @@ export class StockMovementsService {
         toWarehouseId: toWarehouse?.id,
         type,
         note,
+        shiftOperationId,
       }),
     );
 
@@ -216,6 +218,46 @@ export class StockMovementsService {
 
         const toWarehouse = await this.warehousesService.findOneByOrThrow({
           type: WarehouseType.WASTE,
+        });
+
+        return {
+          fromWarehouse,
+          toWarehouse,
+        };
+      }
+
+      case StockMovementType.NOWHERE_TO_USER: {
+        if (!toId) {
+          throw new Error('Correction movement must have a to ID');
+        }
+
+        const fromWarehouse = await this.warehousesService.findOneByOrThrow({
+          type: WarehouseType.NOWHERE,
+        });
+
+        const toWarehouse = await this.warehousesService.findOneByOrThrow({
+          type: WarehouseType.USER,
+          userId: toId,
+        });
+
+        return {
+          fromWarehouse,
+          toWarehouse,
+        };
+      }
+
+      case StockMovementType.NOWHERE_TO_MACHINE: {
+        if (!toId) {
+          throw new Error('Correction movement must have a to ID');
+        }
+
+        const fromWarehouse = await this.warehousesService.findOneByOrThrow({
+          type: WarehouseType.NOWHERE,
+        });
+
+        const toWarehouse = await this.warehousesService.findOneByOrThrow({
+          type: WarehouseType.MACHINE,
+          machineId: toId,
         });
 
         return {

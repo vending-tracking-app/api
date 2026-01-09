@@ -80,13 +80,17 @@ export class WarehousesService {
     if (
       fromWarehouse.type === WarehouseType.CUSTOMER ||
       fromWarehouse.type === WarehouseType.WASTE ||
-      toWarehouse.type === WarehouseType.MARKET
+      toWarehouse.type === WarehouseType.MARKET ||
+      toWarehouse.type === WarehouseType.NOWHERE
     ) {
       throw new Error('Invalid warehouse type');
     }
 
     for (const movementItem of stockMovementItems) {
-      if (fromWarehouse.type !== WarehouseType.MARKET) {
+      if (
+        fromWarehouse.type !== WarehouseType.MARKET &&
+        fromWarehouse.type !== WarehouseType.NOWHERE
+      ) {
         const fromWarehouseProduct = fromWarehouse.warehouseProducts.find(
           (product) => product.productId === movementItem.productId,
         );
