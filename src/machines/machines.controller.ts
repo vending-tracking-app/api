@@ -1,12 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Roles } from '../decorators/roles.decorator';
 import { UserRole } from '../auth/constants/user-role.constant';
 import { MachinesService } from './machines.service';
 import { MachineResponseDto } from './dto/machine-response.dto';
-import { MachinesMapper } from './machines.mapper';
+import { MachinesMapper, MachineStocksMapper } from './machines.mapper';
 import { CreateMachineDto } from './dto/create-machine.dto';
 import { UpdateMachineDto } from './dto/update-machine.dto';
+import { MachineStockResponseDto } from './dto/machine-stock-response.dto';
 
 @Roles(UserRole.ADMIN)
 @Controller('machines')
@@ -25,6 +34,26 @@ export class MachinesController {
   async findOne(@Param('id') id: string): Promise<MachineResponseDto> {
     const machine = await this.machinesService.findOneByOrThrow({ id });
     return MachinesMapper.toResponse(machine);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Get(':id/stock')
+  async findStock(@Param('id') id: string): Promise<MachineStockResponseDto> {
+    const machine = await this.machinesService.findOneBy(
+      { id },
+      { warehouse: { warehouseProducts: true } },
+    );
+
+    // TODO: fix relation types
+    if (
+      !machine ||
+      !machine.warehouse ||
+      !machine.warehouse.warehouseProducts
+    ) {
+      throw new NotFoundException();
+    }
+
+    return MachineStocksMapper.toResponse(machine.warehouse.warehouseProducts);
   }
 
   @Post()

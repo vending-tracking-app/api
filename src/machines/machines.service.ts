@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere } from 'typeorm';
 
 import { MachinesRepository } from './machines.repository';
 import { Machine } from './entities/machine.entity';
@@ -28,8 +28,18 @@ export class MachinesService {
     return this.machinesRepository.find();
   }
 
-  async findOneByOrThrow(where: FindOptionsWhere<Machine>): Promise<Machine> {
-    const machine = await this.machinesRepository.findOne({ where });
+  async findOneBy(
+    where: FindOptionsWhere<Machine>,
+    relations?: FindOptionsRelations<Machine>,
+  ) {
+    return this.machinesRepository.findOne({ where, relations });
+  }
+
+  async findOneByOrThrow(
+    where: FindOptionsWhere<Machine>,
+    relations?: FindOptionsRelations<Machine>,
+  ) {
+    const machine = await this.findOneBy(where, relations);
 
     if (!machine) {
       throw new Error('Machine not found');
