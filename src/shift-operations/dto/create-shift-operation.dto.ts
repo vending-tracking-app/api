@@ -3,11 +3,10 @@ import {
   IsArray,
   IsEnum,
   IsInt,
-  IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   IsUUID,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -17,9 +16,8 @@ class CreateShiftOperationSnapshotItemDto {
   @IsUUID()
   productId: string;
 
-  @IsNumber()
   @IsInt()
-  @IsPositive()
+  @Min(0)
   quantity: number;
 }
 
@@ -33,6 +31,11 @@ export class CreateShiftOperationDto {
 
   @IsEnum(ShiftOperationType)
   type: ShiftOperationType;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  cashCollected?: number;
 
   @Type(() => CreateShiftOperationSnapshotItemDto)
   @IsArray()

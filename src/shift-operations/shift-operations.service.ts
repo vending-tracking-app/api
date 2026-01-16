@@ -14,6 +14,7 @@ interface CreateShiftOperationParams {
   machineId: string;
   note?: string;
   type: ShiftOperationType;
+  cashCollected?: number;
   snapshot: { productId: string; quantity: number }[];
 }
 
@@ -30,7 +31,7 @@ export class ShiftOperationsService {
 
   @Transactional()
   async create(params: CreateShiftOperationParams): Promise<void> {
-    const { machineId, note, type, snapshot } = params;
+    const { machineId, note, type, cashCollected, snapshot } = params;
 
     const createdById = this.contextService.get('userId');
 
@@ -40,6 +41,7 @@ export class ShiftOperationsService {
         machineId,
         createdById,
         note,
+        cashCollected,
       }),
     );
 

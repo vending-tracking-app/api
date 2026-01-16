@@ -3,6 +3,7 @@ import { Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../db/base.entity';
 import { UUIDColumn } from '../../db/columns/uuid-column';
 import { TextColumn } from '../../db/columns/text-column';
+import { NumberColumn } from '../../db/columns/number-column';
 import { ShiftOperationType } from '../constants/shift-operation-type.constant';
 import { Machine } from '../../machines/entities/machine.entity';
 import { User } from '../../users/entities/user.entity';
@@ -27,6 +28,9 @@ export class ShiftOperation extends BaseEntity {
 
   @TextColumn({ nullable: true })
   note: string | null;
+
+  @NumberColumn({ nullable: true })
+  cashCollected: number | null;
 
   @OneToMany(
     () => StockMovement,
