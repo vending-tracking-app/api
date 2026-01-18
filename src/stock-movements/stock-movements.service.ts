@@ -31,6 +31,10 @@ export class StockMovementsService {
   async create(params: CreateStockMovementParams) {
     const { fromId, toId, type, note, items, shiftOperationId } = params;
 
+    if (fromId === toId) {
+      throw new Error('From ID and to ID cannot be the same');
+    }
+
     const { fromWarehouse, toWarehouse } =
       await this.getWarehousesForStockMovement({
         type,

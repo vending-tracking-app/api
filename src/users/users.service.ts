@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere } from 'typeorm';
 
 import { ConfigService } from '../config/config.service';
 import { UsersRepository } from './users.repository';
@@ -62,8 +62,11 @@ export class UsersService implements OnModuleInit {
     return this.usersRepository.find();
   }
 
-  async findOneByOrThrow(where: FindOptionsWhere<User>): Promise<User> {
-    const user = await this.findOneBy(where);
+  async findOneByOrThrow(
+    where: FindOptionsWhere<User>,
+    relations?: FindOptionsRelations<User>,
+  ) {
+    const user = await this.findOneBy(where, relations);
 
     if (!user) {
       throw new Error('User not found');
@@ -72,8 +75,11 @@ export class UsersService implements OnModuleInit {
     return user;
   }
 
-  async findOneBy(where: FindOptionsWhere<User>): Promise<User | null> {
-    return this.usersRepository.findOne({ where });
+  async findOneBy(
+    where: FindOptionsWhere<User>,
+    relations?: FindOptionsRelations<User>,
+  ) {
+    return this.usersRepository.findOne({ where, relations });
   }
 
   @Transactional()
