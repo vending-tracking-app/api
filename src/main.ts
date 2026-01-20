@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { bodyParserMiddleware } from './utils/body-parser.middleware';
+import { ConfigService } from './config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,7 +17,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
 
   const configService = app.get(ConfigService);
-  const port = parseInt(configService.getOrThrow('PORT'));
+  const port = configService.get('env.port');
   await app.listen(port);
 }
 

@@ -1,5 +1,7 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import { ConfigModule } from './config/config.module';
 import { DbModule } from './db/db.module';
@@ -17,6 +19,9 @@ import { RolesGuard } from './guards/roles.guard';
 @Module({
   imports: [
     ConfigModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+    }),
     DbModule,
     ContextModule,
     AuthModule,
