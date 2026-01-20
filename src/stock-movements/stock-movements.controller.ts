@@ -10,7 +10,7 @@ import { SUCCESS_RESULT } from '../constants/success-result.constant';
 export class StockMovementsController {
   constructor(private readonly stockMovementsService: StockMovementsService) {}
 
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN)
   @Post()
   async create(
     @Body() createStockMovementDto: CreateStockMovementDto,
