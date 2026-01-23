@@ -12,11 +12,18 @@ async function bootstrap() {
 
   app.use(bodyParserMiddleware);
 
+  const configService = app.get(ConfigService);
+
+  app.enableCors({
+    origin: configService.get('frontendUrl'),
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
+
   const config = new DocumentBuilder().build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  const configService = app.get(ConfigService);
   const port = configService.get('env.port');
   await app.listen(port);
 }
