@@ -13,7 +13,6 @@ import { typeormAdapter } from './typeorm-adapter';
 import { UserRole } from './constants/user-role.constant';
 
 const authOptions = {
-  basePath: '/auth',
   emailAndPassword: { enabled: true },
   plugins: [adminPlugin()],
   advanced: {
