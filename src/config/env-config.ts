@@ -5,6 +5,7 @@ const REQUIRED_ENV_KEYS = [
   'NODE_ENV',
   'ENV_NAME',
   'PORT',
+  'GLOBAL_PREFIX',
   // Database
   'DB_HOST',
   'DB_PORT',
@@ -41,6 +42,7 @@ export function envConfig() {
       nodeEnv: env.NODE_ENV,
       name: env.ENV_NAME,
       port: parseInt(env.PORT, 10),
+      globalPrefix: env.GLOBAL_PREFIX,
     },
     database: {
       host: env.DB_HOST,

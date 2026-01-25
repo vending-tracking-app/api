@@ -11,12 +11,14 @@ async function bootstrap() {
   });
 
   app.use(bodyParserMiddleware);
+
+  const configService = app.get(ConfigService);
+  app.setGlobalPrefix(configService.get('env.globalPrefix'));
   
   const config = new DocumentBuilder().build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
   
-  const configService = app.get(ConfigService);
   const port = configService.get('env.port');
   await app.listen(port);
 }
