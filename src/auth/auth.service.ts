@@ -9,7 +9,6 @@ import { fromNodeHeaders } from 'better-auth/node';
 import { IncomingHttpHeaders } from 'http';
 import { DataSource } from 'typeorm';
 
-import { ConfigService } from '../config/config.service';
 import { typeormAdapter } from './typeorm-adapter';
 import { UserRole } from './constants/user-role.constant';
 
@@ -31,12 +30,10 @@ export class AuthService {
   readonly betterAuth: Auth;
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly dataSource: DataSource,
   ) {
     this.betterAuth = betterAuthFactory({
       ...authOptions,
-      trustedOrigins: [this.configService.get('frontendUrl')],
       database: typeormAdapter(this.dataSource),
     });
   }

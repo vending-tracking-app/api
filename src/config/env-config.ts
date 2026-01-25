@@ -14,8 +14,6 @@ const REQUIRED_ENV_KEYS = [
   // Better Auth
   'BETTER_AUTH_SECRET',
   'BETTER_AUTH_URL',
-  // Frontend URL
-  'FRONTEND_URL',
   // Default admin credentials
   'DEFAULT_ADMIN_EMAIL',
   'DEFAULT_ADMIN_PASSWORD',
@@ -55,7 +53,6 @@ export function envConfig() {
       secret: env.BETTER_AUTH_SECRET,
       url: env.BETTER_AUTH_URL,
     },
-    frontendUrl: env.FRONTEND_URL,
     defaultAdmin: {
       email: env.DEFAULT_ADMIN_EMAIL,
       password: env.DEFAULT_ADMIN_PASSWORD,
