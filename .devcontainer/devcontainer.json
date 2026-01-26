@@ -1,0 +1,5 @@
+{
+	"name": "vendi-api",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node",
+	"runArgs": ["--name", "vendi-api"]
+}
