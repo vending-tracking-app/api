@@ -206,11 +206,20 @@ export const typeormAdapter = (dataSource: DataSource) =>
     }) => {
       function convertWhereToFindOptions(
         model: string,
+        action:
+          | 'create'
+          | 'update'
+          | 'findOne'
+          | 'findMany'
+          | 'updateMany'
+          | 'delete'
+          | 'deleteMany'
+          | 'count',
         where?: Where[],
       ): FindOptionsWhere<ObjectLiteral> {
         if (!where || where.length === 0) return {};
 
-        const cleanedWhere = transformWhereClause({ model, where });
+        const cleanedWhere = transformWhereClause({ model, where, action });
         const findOptions: FindOptionsWhere<ObjectLiteral> = {};
 
         for (const w of cleanedWhere) {
@@ -265,7 +274,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'update',
+              where,
+            );
             const transformed = await transformInput(
               update as Record<string, unknown>,
               model,
@@ -304,7 +317,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'delete',
+              where,
+            );
             await repository.delete(findOptions);
           } catch (error: unknown) {
             const message =
@@ -322,7 +339,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'findOne',
+              where,
+            );
             const result = await repository.findOne({
               where: findOptions,
               select: select,
@@ -352,7 +373,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'findMany',
+              where,
+            );
 
             const result = await repository.find({
               where: findOptions,
@@ -384,7 +409,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'count',
+              where,
+            );
             const result = await repository.count({ where: findOptions });
             return result;
           } catch (error: unknown) {
@@ -403,7 +432,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'updateMany',
+              where,
+            );
             const transformed = await transformInput(update, model, 'update');
 
             const result = await repository.update(findOptions, transformed);
@@ -425,7 +458,11 @@ export const typeormAdapter = (dataSource: DataSource) =>
           const repository = dataSource.getRepository(repositoryName);
 
           try {
-            const findOptions = convertWhereToFindOptions(model, where);
+            const findOptions = convertWhereToFindOptions(
+              model,
+              'deleteMany',
+              where,
+            );
             const result = await repository.delete(findOptions);
             return result.affected ?? 0;
           } catch (error: unknown) {
