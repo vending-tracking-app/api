@@ -28,9 +28,7 @@ export type Auth = BetterAuth<typeof authOptions>;
 export class AuthService {
   readonly betterAuth: Auth;
 
-  constructor(
-    private readonly dataSource: DataSource,
-  ) {
+  constructor(private readonly dataSource: DataSource) {
     this.betterAuth = betterAuthFactory({
       ...authOptions,
       database: typeormAdapter(this.dataSource),
