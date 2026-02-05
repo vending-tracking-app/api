@@ -1,6 +1,5 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { join } from 'path';
 
 import { ConfigModule } from './config/config.module';
 import { DbModule } from './db/db.module';
