@@ -6,11 +6,11 @@ import { StockMovementsService } from './stock-movements.service';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 import { SUCCESS_RESULT } from '../constants/success-result.constant';
 
+@Roles(UserRole.ADMIN)
 @Controller('stock-movements')
 export class StockMovementsController {
   constructor(private readonly stockMovementsService: StockMovementsService) {}
 
-  @Roles(UserRole.ADMIN)
   @Post()
   async create(
     @Body() createStockMovementDto: CreateStockMovementDto,

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 
 import { ShiftOperationType } from './constants/shift-operation-type.constant';
@@ -28,6 +28,24 @@ export class ShiftOperationsService {
     private readonly warehousesService: WarehousesService,
     private readonly stockMovementsService: StockMovementsService,
   ) {}
+
+  async findByMachineId(machineId: string): Promise<ShiftOperation[]> {
+    return this.shiftOperationsRepository.find({
+      where: { machineId },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findOneByIdOrThrow(id: string) {
+    const shiftOperation = await this.shiftOperationsRepository.findOne({
+      where: { id },
+      relations: { stockMovements: { items: true } },
+    });
+    if (!shiftOperation) {
+      throw new NotFoundException();
+    }
+    return shiftOperation;
+  }
 
   @Transactional()
   async create(params: CreateShiftOperationParams): Promise<void> {
