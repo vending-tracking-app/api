@@ -66,6 +66,98 @@ export class StockMovementsService {
     await this.warehousesService.recalculateStocks(movement, movementItems);
   }
 
+  async getMachineSales(params: {
+    machineId: string;
+    from?: string;
+    to?: string;
+    productId?: string;
+  }): Promise<
+    {
+      productId: string;
+      productName: string;
+      points: { date: string; units: number }[];
+    }[]
+  > {
+    const { machineId, from, to, productId } = params;
+
+    const machineWarehouse = await this.warehousesService.findOneByOrThrow({
+      type: WarehouseType.MACHINE,
+      machineId,
+    });
+
+    const query = this.stockMovementsRepository
+      .createQueryBuilder('movement')
+      .innerJoin('movement.items', 'item')
+      .innerJoin('item.product', 'product')
+      .select("DATE_TRUNC('day', movement.createdAt)", 'date')
+      .addSelect('item.productId', 'productId')
+      .addSelect('product.name', 'productName')
+      .addSelect('SUM(item.quantity)', 'units')
+      .where('movement.type = :type', {
+        type: StockMovementType.MACHINE_TO_CUSTOMER,
+      })
+      .andWhere('movement.fromWarehouseId = :warehouseId', {
+        warehouseId: machineWarehouse.id,
+      })
+      .groupBy('date')
+      .addGroupBy('item.productId')
+      .addGroupBy('product.name')
+      .orderBy('date', 'ASC');
+
+    if (productId) {
+      query.andWhere('item.productId = :productId', { productId });
+    }
+
+    if (from) {
+      query.andWhere('movement.createdAt >= :from', {
+        from: new Date(from),
+      });
+    }
+
+    if (to) {
+      const toDate = new Date(to);
+      toDate.setDate(toDate.getDate() + 1);
+      query.andWhere('movement.createdAt < :to', { to: toDate });
+    }
+
+    const rows = await query.getRawMany<{
+      date: Date;
+      productId: string;
+      productName: string;
+      units: string;
+    }>();
+
+    const seriesMap = new Map<
+      string,
+      {
+        productId: string;
+        productName: string;
+        points: { date: string; units: number }[];
+      }
+    >();
+
+    rows.forEach((row) => {
+      const dateValue =
+        row.date instanceof Date ? row.date : new Date(row.date);
+      const date = dateValue.toISOString().slice(0, 10);
+      const units = Number(row.units ?? 0);
+      const existing = seriesMap.get(row.productId);
+
+      if (existing) {
+        existing.points.push({ date, units });
+        return;
+      }
+
+      seriesMap.set(row.productId, {
+        productId: row.productId,
+        productName: row.productName,
+        points: [{ date, units }],
+      });
+    });
+
+    return Array.from(seriesMap.values());
+  }
+
   private async getWarehousesForStockMovement({
     type,
     fromId,

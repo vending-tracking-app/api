@@ -10,4 +10,8 @@ export class StockMovementsRepository extends BaseRepository<StockMovement> {
   constructor(txHost: TransactionHost<TransactionalAdapterTypeOrm>) {
     super(txHost, StockMovement);
   }
+
+  createQueryBuilder(alias: string) {
+    return this.repository.createQueryBuilder(alias);
+  }
 }

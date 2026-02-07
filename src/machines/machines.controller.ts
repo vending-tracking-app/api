@@ -6,21 +6,28 @@ import {
   Patch,
   Param,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 
 import { Roles } from '../decorators/roles.decorator';
 import { UserRole } from '../auth/constants/user-role.constant';
 import { MachinesService } from './machines.service';
+import { StockMovementsService } from '../stock-movements/stock-movements.service';
 import { MachineResponseDto } from './dto/machine-response.dto';
 import { MachinesMapper, MachineStocksMapper } from './machines.mapper';
 import { CreateMachineDto } from './dto/create-machine.dto';
 import { UpdateMachineDto } from './dto/update-machine.dto';
 import { MachineStockResponseDto } from './dto/machine-stock-response.dto';
+import { MachineSalesQueryDto } from './dto/machine-sales-query.dto';
+import { MachineSalesResponseDto } from './dto/machine-sales-response.dto';
 
 @Roles(UserRole.ADMIN)
 @Controller('machines')
 export class MachinesController {
-  constructor(private readonly machinesService: MachinesService) {}
+  constructor(
+    private readonly machinesService: MachinesService,
+    private readonly stockMovementsService: StockMovementsService,
+  ) {}
 
   @Roles(UserRole.ADMIN, UserRole.USER)
   @Get()
@@ -54,6 +61,21 @@ export class MachinesController {
     }
 
     return MachineStocksMapper.toResponse(machine.warehouse.warehouseProducts);
+  }
+
+  @Get(':id/sales')
+  async findSales(
+    @Param('id') id: string,
+    @Query() query: MachineSalesQueryDto,
+  ): Promise<MachineSalesResponseDto> {
+    const series = await this.stockMovementsService.getMachineSales({
+      machineId: id,
+      from: query.from,
+      to: query.to,
+      productId: query.productId,
+    });
+
+    return { series };
   }
 
   @Post()
