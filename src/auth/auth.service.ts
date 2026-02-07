@@ -22,6 +22,10 @@ const authOptions = {
         // Dev-only stub: log OTP to the console
         console.log(`[Auth] OTP for ${phone}: ${code}`);
       },
+      sendPasswordResetOTP: ({ phoneNumber: phone, code }) => {
+        // Dev-only stub: log OTP to the console
+        console.log(`[Auth] Password reset OTP for ${phone}: ${code}`);
+      },
       signUpOnVerification: {
         getTempEmail: (phone) => `${phone}@phone.local`,
       },
