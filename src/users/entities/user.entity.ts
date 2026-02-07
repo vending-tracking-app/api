@@ -16,6 +16,13 @@ export class User extends BaseEntity {
   @TextColumn()
   email: string;
 
+  @Index({ unique: true })
+  @TextColumn({ nullable: true })
+  phoneNumber: string | null;
+
+  @BooleanColumn({ nullable: true })
+  phoneNumberVerified: boolean | null;
+
   @BooleanColumn({ default: false })
   emailVerified: boolean;
 

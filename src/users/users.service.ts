@@ -9,10 +9,11 @@ import { WarehousesService } from '../warehouses/warehouses.service';
 import { User } from './entities/user.entity';
 import { UserRole } from '../auth/constants/user-role.constant';
 import { WarehouseType } from '../warehouses/constants/warehouse-type.constant';
+import { normalizePhoneNumber } from '../utils/phone-normalize';
 
 export interface CreateUserParams {
   name: string;
-  email: string;
+  phoneNumber: string;
   password: string;
   role: UserRole;
   image?: string;
@@ -20,7 +21,7 @@ export interface CreateUserParams {
 
 export interface UpdateUserParams {
   name?: string;
-  email?: string;
+  phoneNumber?: string;
   image?: string;
 }
 
@@ -47,7 +48,7 @@ export class UsersService implements OnModuleInit {
       }
 
       await this.create({
-        email: this.configService.get('defaultAdmin.email'),
+        phoneNumber: this.configService.get('defaultAdmin.phone'),
         password: this.configService.get('defaultAdmin.password'),
         name: 'Default admin',
         role: UserRole.ADMIN,
@@ -84,15 +85,20 @@ export class UsersService implements OnModuleInit {
 
   @Transactional()
   async create(data: CreateUserParams): Promise<User> {
+    const normalizedPhoneNumber = normalizePhoneNumber(data.phoneNumber);
+
     const existingUser = await this.usersRepository.findOne({
-      where: { email: data.email },
+      where: { phoneNumber: normalizedPhoneNumber },
     });
 
     if (existingUser) {
-      throw new Error('User with this email already exists');
+      throw new Error('User with this phone number already exists');
     }
 
-    const { user } = await this.authService.createUser(data);
+    const { user } = await this.authService.createUser({
+      ...data,
+      phoneNumber: normalizedPhoneNumber,
+    });
 
     await this.warehousesService.create({
       type: WarehouseType.USER,
@@ -110,8 +116,17 @@ export class UsersService implements OnModuleInit {
       user.name = data.name;
     }
 
-    if (data.email !== undefined) {
-      user.email = data.email;
+    if (data.phoneNumber !== undefined) {
+      const normalizedPhoneNumber = normalizePhoneNumber(data.phoneNumber);
+      const existingUser = await this.usersRepository.findOne({
+        where: { phoneNumber: normalizedPhoneNumber },
+      });
+
+      if (existingUser && existingUser.id !== user.id) {
+        throw new Error('User with this phone number already exists');
+      }
+
+      user.phoneNumber = normalizedPhoneNumber;
     }
 
     if (data.image !== undefined) {

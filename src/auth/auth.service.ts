@@ -4,17 +4,29 @@ import {
   betterAuth as betterAuthFactory,
   BetterAuthOptions,
 } from 'better-auth';
-import { admin as adminPlugin } from 'better-auth/plugins';
+import { admin as adminPlugin, phoneNumber } from 'better-auth/plugins';
 import { fromNodeHeaders } from 'better-auth/node';
 import { IncomingHttpHeaders } from 'http';
 import { DataSource } from 'typeorm';
 
 import { typeormAdapter } from './typeorm-adapter';
 import { UserRole } from './constants/user-role.constant';
+import { normalizePhoneNumber } from '../utils/phone-normalize';
 
 const authOptions = {
   emailAndPassword: { enabled: true },
-  plugins: [adminPlugin()],
+  plugins: [
+    adminPlugin(),
+    phoneNumber({
+      sendOTP: ({ phoneNumber: phone, code }) => {
+        // Dev-only stub: log OTP to the console
+        console.log(`[Auth] OTP for ${phone}: ${code}`);
+      },
+      signUpOnVerification: {
+        getTempEmail: (phone) => `${phone}@phone.local`,
+      },
+    }),
+  ],
   advanced: {
     database: {
       generateId: 'uuid',
@@ -42,19 +54,21 @@ export class AuthService {
   }
 
   async createUser(data: {
-    email: string;
+    phoneNumber: string;
     name: string;
     password: string;
     role: UserRole;
     image?: string;
   }) {
+    const normalizedPhoneNumber = normalizePhoneNumber(data.phoneNumber);
     return this.betterAuth.api.createUser({
       body: {
-        email: data.email,
+        email: `${normalizedPhoneNumber}@phone.local`,
         password: data.password,
         name: data.name,
         role: data.role,
         data: {
+          phoneNumber: normalizedPhoneNumber,
           image: data.image,
         },
       },

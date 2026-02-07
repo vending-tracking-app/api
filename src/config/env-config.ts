@@ -18,6 +18,7 @@ const REQUIRED_ENV_KEYS = [
   // Default admin credentials
   'DEFAULT_ADMIN_EMAIL',
   'DEFAULT_ADMIN_PASSWORD',
+  'DEFAULT_ADMIN_PHONE',
 ] as const;
 
 type RequiredEnvKeys = (typeof REQUIRED_ENV_KEYS)[number];
@@ -58,6 +59,7 @@ export function envConfig() {
     defaultAdmin: {
       email: env.DEFAULT_ADMIN_EMAIL,
       password: env.DEFAULT_ADMIN_PASSWORD,
+      phone: env.DEFAULT_ADMIN_PHONE,
     },
   };
 }

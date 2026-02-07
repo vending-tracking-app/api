@@ -5,7 +5,7 @@ import { type Request, type Response } from 'express';
 
 import { Public } from '../decorators/public.decorator';
 import { AuthService } from './auth.service';
-import { EmailSignInDto } from './dto/email-sign-in.dto';
+import { PhoneSignInDto } from './dto/phone-sign-in.dto';
 
 @Public()
 @Controller('auth')
@@ -20,11 +20,11 @@ export class AuthController {
 
   // This endpoint is for Swagger authentication only
   // In practice, all /auth endpoints (including this one) are handled by the catch-all route above
-  @Post('/sign-in/email')
-  async signInEmail(
+  @Post('/sign-in/phone-number')
+  async signInPhoneNumber(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() _: EmailSignInDto,
+    @Body() _: PhoneSignInDto,
   ) {
     await toNodeHandler(this.authService.betterAuth)(req, res);
   }

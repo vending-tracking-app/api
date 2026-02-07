@@ -22,6 +22,7 @@ import { AddStockMovementEntity1764705810725 } from './migrations/1764705810725-
 import { AddNowhereWarehouse1767916403375 } from './migrations/1767916403375-add-nowhere-warehouse';
 import { AddShiftOperationEntity1767916487778 } from './migrations/1767916487778-add-shift-operation-entity';
 import { AddCashCollectedToShiftOperation1768565912214 } from './migrations/1768565912214-add-cash-collected-to-shift-operation';
+import { AddPhoneNumberFields1770472981226 } from './migrations/1770472981226-add-phone-number-fields';
 
 config();
 
@@ -56,6 +57,7 @@ const dataSource = new DataSource({
     AddNowhereWarehouse1767916403375,
     AddShiftOperationEntity1767916487778,
     AddCashCollectedToShiftOperation1768565912214,
+    AddPhoneNumberFields1770472981226,
   ],
 });
 

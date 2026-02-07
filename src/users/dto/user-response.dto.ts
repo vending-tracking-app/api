@@ -6,6 +6,7 @@ export class UserResponseDto {
   updatedAt: string;
   name: string;
   email: string;
+  phoneNumber: string | null;
   role: UserRole;
   image: string | null;
 }

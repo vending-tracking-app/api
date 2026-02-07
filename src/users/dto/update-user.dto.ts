@@ -7,7 +7,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  email?: string;
+  phoneNumber?: string;
 
   @IsOptional()
   @IsUrl()

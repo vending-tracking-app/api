@@ -11,6 +11,7 @@ export class UsersMapper {
     dto.updatedAt = user.updatedAt.toISOString();
     dto.name = user.name;
     dto.email = user.email;
+    dto.phoneNumber = user.phoneNumber ?? null;
     dto.role = user.role;
     dto.image = user.image;
     return dto;
